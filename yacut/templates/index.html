@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="container my-5 px-4">
+  <h1 class="text-center"><span style="color:red">Ya</span>Cut</h1>
+  <p class="text-center my-4">
+    Создайте короткую ссылку автоматически или предложите свой вариант
+  </p>
+
+  <!-- Блок с результатом (показывается только при result_link) -->
+  {% if result_link %}
+    <div class="alert alert-success mt-4 text-center">
+      <h4>Ссылка успешно создана!</h4>
+      <p>Короткая ссылка: <strong><a href="{{ result_link }}" target="_blank">{{ result_link }}</a></strong></p>
+    </div>
+  {% endif %}
+
+  <div class="row justify-content-center">
+    <div class="col-sm-8 col-md-6">
+      <form method="post">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+          {{ form.original_link.label(class="form-label") }}
+          {{ form.original_link(class="form-control form-control-lg py-2", placeholder="Длинная ссылка") }}
+          {% for error in form.original_link.errors %}
+            <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <div class="mb-3">
+          {{ form.custom_id.label(class="form-label") }}
+          <small class="text-muted">Не обязательно, максимум 16 символов</small>
+          {{ form.custom_id(class="form-control form-control-lg py-2", placeholder="Ваш вариант короткой ссылки") }}
+          {% for error in form.custom_id.errors %}
+            <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg w-100">Создать</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

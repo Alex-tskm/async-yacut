@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="container my-5 px-4">
+  <h1 class="text-center"><span style="color:red">Ya</span>Cut — загрузка файлов</h1>
+  <p class="text-center my-4">
+    Загрузите файлы, для каждого будет создана короткая ссылка на скачивание с Яндекс Диска
+  </p>
+
+  <div class="row justify-content-center">
+    <div class="col-sm-8 col-md-6">
+      <form method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="mb-3">
+          {{ form.files.label(class="form-label") }}
+          {{ form.files(class="form-control", multiple=true, accept=".jpg,.jpeg,.png,.gif,.bmp,.pdf,.docx,.zip") }}
+          {% for error in form.files.errors %}
+            <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg w-100">Загрузить файлы</button>
+      </form>
+    </div>
+  </div>
+
+  {% if results %}
+    <div class="mt-5">
+      <h3>Результаты загрузки</h3>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Имя файла</th>
+            <th>Короткая ссылка</th>
+            <th>Действие</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for filename, short in results %}
+            <tr>
+              <td>{{ filename }}</td>
+              <td><code>{{ short }}</code></td>
+              <td>
+                {# ВАЖНО: используем base_url из views.py, чтобы в HTML была полная ссылка http://... #}
+                {% if base_url %}
+                  <a href="{{ base_url }}/{{ short }}" class="btn btn-sm btn-outline-primary" target="_blank">Скачать</a>
+                {% else %}
+                  {# Фоллбэк, если base_url вдруг не передан (для локальной разработки без тестов) #}
+                  <a href="/{{ short }}" class="btn btn-sm btn-outline-primary" target="_blank">Скачать</a>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}
